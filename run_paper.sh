@@ -33,6 +33,19 @@ CLAUDE_EFFORT="${CLAUDE_EFFORT:-high}"
 
 export PATH="$HOME/local/node/bin:$PATH"
 
+# Pick a wrapper that gives `claude` unbuffered stdout/stderr so log files
+# stream in real time and the activity monitor sees progress. Prefer
+# stdbuf (always present via coreutils) over unbuffer (depends on the
+# `expect` Tcl extension being findable — broken on systems where a
+# non-system Tcl such as conda's shadows /usr/bin/tclsh).
+if command -v stdbuf >/dev/null 2>&1; then
+    CLAUDE_UNBUF=(stdbuf -o0 -e0)
+elif command -v unbuffer >/dev/null 2>&1 && unbuffer true >/dev/null 2>&1; then
+    CLAUDE_UNBUF=(unbuffer)
+else
+    CLAUDE_UNBUF=()
+fi
+
 # ── File-state step inference ────────────────────────────────────────
 #
 # Determines the last completed step by checking which output files
@@ -670,6 +683,9 @@ Do NOT proceed to Step 1 — stop after setup is complete."
 
 Do not inspect, reference, reuse, or mention completed projects unless the human researcher explicitly points you to one. Work only from the current project directory, the source data, and shared infrastructure."
 
+    # Preserve caller's errexit state.
+    _SETUP_HAD_E=0
+    [[ $- == *e* ]] && _SETUP_HAD_E=1
     set +e
     (
         cd "$PROJECT" && timeout --kill-after=120 3600 \
@@ -700,7 +716,7 @@ Do not inspect, reference, reuse, or mention completed projects unless the human
 
     wait "$SETUP_PID" 2>/dev/null
     SETUP_EC=$?
-    set -e
+    (( _SETUP_HAD_E )) && set -e || true
 
     if project_setup_complete "$PROJECT"; then
         log "Setup complete"
@@ -1027,12 +1043,16 @@ NOTE FROM THE RESEARCHER: $note"
     local claude_log="$PROJECT/logs/step_${NEXT}_claude_$(date +%Y%m%d_%H%M%S).log"
     log "   Claude worker: ${prompt_src:0:60}"
 
+    # Preserve caller's errexit state — otherwise a Claude failure can leak
+    # an unwanted `set -e` back into the caller and kill the runner.
+    local _had_e=0
+    [[ $- == *e* ]] && _had_e=1
     set +e
-    ( cd "$PROJECT" && unbuffer timeout --kill-after=120 "$timeout" \
+    ( cd "$PROJECT" && "${CLAUDE_UNBUF[@]}" timeout --kill-after=120 "$timeout" \
         claude -p "$prompt" --dangerously-skip-permissions --effort "$CLAUDE_EFFORT" \
     ) > "$claude_log" 2>&1
     local ec=$?
-    set -e
+    (( _had_e )) && set -e || true
 
     case "$ec" in
         0)   log "   Claude exited OK" ;;
@@ -1475,11 +1495,13 @@ NOTE FROM THE RESEARCHER: $step1b5_note"
     if (( ! have_1b5 )); then
         if (( step1b5_started )); then
             local step1b5_ec
+            local _had_e=0
+            [[ $- == *e* ]] && _had_e=1
             log "   Step 1B.5: waiting for background data-context memo to finish"
             set +e
             wait "$step1b5_pid"
             step1b5_ec=$?
-            set -e
+            (( _had_e )) && set -e || true
             case "$step1b5_ec" in
                 0)   log "   Step 1B.5 background completed OK" ;;
                 124) log "   Step 1B.5 background TIMEOUT" ;;
@@ -1497,11 +1519,13 @@ NOTE FROM THE RESEARCHER: $step1b5_note"
     if (( ! have_1a )); then
         if (( step1a_started )); then
             local step1a_ec
+            local _had_e=0
+            [[ $- == *e* ]] && _had_e=1
             log "   Step 1A: waiting for background deep research to finish"
             set +e
             wait "$step1a_pid"
             step1a_ec=$?
-            set -e
+            (( _had_e )) && set -e || true
             case "$step1a_ec" in
                 0)   log "   Step 1A background completed OK" ;;
                 124) log "   Step 1A background TIMEOUT" ;;
@@ -1570,7 +1594,7 @@ NOTE FROM THE RESEARCHER: $note"
             ) > "$log_path" 2>&1 &
         else
             (
-                cd "$PROJECT" && unbuffer timeout --kill-after=120 "$finding_timeout" \
+                cd "$PROJECT" && "${CLAUDE_UNBUF[@]}" timeout --kill-after=120 "$finding_timeout" \
                     claude -p "$prompt" --dangerously-skip-permissions --effort "$CLAUDE_EFFORT"
             ) > "$log_path" 2>&1 &
         fi
