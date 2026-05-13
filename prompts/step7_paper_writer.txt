@@ -167,7 +167,7 @@ Keywords: Keyword One $|$ Keyword Two $|$ Keyword Three
 \note{Standard errors in parentheses. * p<0.05, ** p<0.01, *** p<0.001.}
 \end{table}
 ```
-If the esttab output already includes `\begin{table}` with a caption, do not wrap it in another table environment.
+If the table writer's output already includes `\begin{table}` with a caption (rather than just a bare `tabular` block), do not wrap it in another table environment.
 
 **Citations**: Use natbib — `\citet{}` for in-text, `\citep{}` for parenthetical, `\citealp{}` for no parentheses. End the document with:
 ```latex

@@ -74,10 +74,10 @@ project_has_analysis_ready_data() {
     while IFS= read -r dir; do
         [[ -z "$dir" ]] && continue
         # Analysis outputs often live in one level of subdirectories under
-        # data/final (for example yearly shards or chunked .dta exports).
+        # data/final (for example yearly shards or chunked exports).
         # Search recursively and stop at the first qualifying file.
         if find "$dir" -type f \
-            \( -name '*.dta' -o -name '*.parquet' -o -name '*.csv' -o -name '*.rds' -o -name '*.feather' \) \
+            \( -name '*.parquet' -o -name '*.feather' -o -name '*.csv' -o -name '*.csv.gz' -o -name '*.arrow' -o -name '*.h5' -o -name '*.hdf5' -o -name '*.pkl' \) \
             -size +8k -print -quit 2>/dev/null | grep -q .; then
             return 0
         fi
@@ -212,13 +212,13 @@ infer_step() {
                _review_step_is_fresh 11 "$P/final_review.md"; then
                 echo 11 && return
             fi
-            if [[ -d "$P/do/archive/pre_step10" && -f "$P/revision_summary.md" && \
+            if [[ -d "$P/code/archive/pre_step10" && -f "$P/revision_summary.md" && \
                   -f "$P/findings_brief.md" && -f "$paper" ]]; then
                 if (( $(_lines "$P/revision_summary.md") >= 10 )) && \
                    _is_newer_by "$paper" "$reopen_marker" 60 && \
                    _is_newer_by "$P/findings_brief.md" "$reopen_marker" 60 && \
                    _is_newer_by "$P/revision_summary.md" "$reopen_marker" 1 && \
-                   _review_step_is_fresh 10 "$P/revision_summary.md" "$paper" "$P/findings_brief.md" "$P/do/archive/pre_step10"; then
+                   _review_step_is_fresh 10 "$P/revision_summary.md" "$paper" "$P/findings_brief.md" "$P/code/archive/pre_step10"; then
                     echo 10 && return
                 fi
             fi
@@ -252,12 +252,12 @@ infer_step() {
             && _review_step_is_fresh 11 "$P/final_review.md" \
             && echo 11 && return
 
-        if [[ -d "$P/do/archive/pre_step10" && -f "$P/review_comments.md" && \
+        if [[ -d "$P/code/archive/pre_step10" && -f "$P/review_comments.md" && \
               -f "$P/revision_summary.md" && -f "$P/findings_brief.md" && -f "$paper" ]]; then
             if (( $(_lines "$P/revision_summary.md") >= 10 )) && \
                _is_newer_by "$paper" "$P/review_comments.md" 60 && \
                _is_newer_by "$P/findings_brief.md" "$P/review_comments.md" 60 && \
-               _review_step_is_fresh 10 "$P/revision_summary.md" "$paper" "$P/findings_brief.md" "$P/do/archive/pre_step10"; then
+               _review_step_is_fresh 10 "$P/revision_summary.md" "$paper" "$P/findings_brief.md" "$P/code/archive/pre_step10"; then
                 echo 10 && return
             fi
         fi
@@ -650,9 +650,10 @@ The base name is \"$BASE\". The project directory and template files
 (style/paper.sty, bib/bibliography.bst, style/model_papers_style.json,
 analysis_guide.md) are already in place.
 
-Execute ONLY the PREREQUISITES section: locate the .dta data files on
-the filesystem, write project_brief.md with data locations and research
-question, and update checkpoint.md to Last completed step: 0.
+Execute ONLY the PREREQUISITES section: locate the source data files on
+the filesystem (parquet, csv, feather, or other tabular formats), write
+project_brief.md with data locations and research question, and update
+checkpoint.md to Last completed step: 0.
 
 Do NOT proceed to Step 1 — stop after setup is complete."
 
@@ -823,7 +824,7 @@ prepend_agent_key() {
 
 common_prompt_preamble() {
     cat <<EOF
-Before doing any substantive work, read \`analysis_guide.md\` in the current project directory if it exists. Treat it as the canonical guide for local Stata/job execution, figure style, data layout, do-file conventions, error recovery, and esttab formatting. For tasks that do not touch those areas directly, skim it and apply the relevant parts.
+Before doing any substantive work, read \`analysis_guide.md\` in the current project directory if it exists. Treat it as the canonical guide for local Python execution, figure style, data layout, script conventions, error recovery, and regression-table formatting. For tasks that do not touch those areas directly, skim it and apply the relevant parts.
 
 If \`human_review.md\` exists in the current project directory, read it before doing substantive work. Treat it as the newest human reviewer guidance for the current review cycle. If it conflicts with older review materials, prefer \`human_review.md\`. Older downstream artifacts may still be on disk for context after a rewind or revision request; do not treat them as authoritative unless you deliberately reuse or regenerate them in the current step.
 
@@ -966,7 +967,7 @@ NOTE FROM THE RESEARCHER: $note"
         now=$(date +%s)
         if (( now - stale_since > hang_timeout )); then
             # Before killing, check if Codex has active child processes
-            # (e.g., stata, python). If children are running, the agent
+            # (e.g., python). If children are running, the agent
             # is waiting on a long job, not hung.
             local children
             children=$(pgrep -P "$codex_pid" 2>/dev/null | wc -l)
@@ -1231,24 +1232,24 @@ NOTE FROM THE RESEARCHER: $note"
                 fi
             fi
 
-            # Kill if hung — but only if no real work (stata) is running.
+            # Kill if hung — but only if real work (python) is running.
             # The process tree is: subshell -> timeout -> codex -> children.
             # pgrep -P on the subshell always finds "timeout", so a simple
             # child-count check never triggers the kill. Instead, walk the
-            # full descendant tree and look for stata specifically.
+            # full descendant tree and look for python specifically.
             if (( now - stale_since[$i] > hang_timeout )); then
                 local has_work=false
                 local desc_pids
                 desc_pids=$(pgrep -P "${pids[$i]}" 2>/dev/null || true)
                 # Walk the full tree (children, grandchildren, etc.)
-                # Look for srun (stata via stata_submit.sh) or stata itself
+                # Look for python (analysis scripts launched via python_submit.sh)
                 local frontier="$desc_pids"
                 while [[ -n "$frontier" ]]; do
                     local next_frontier=""
                     for dpid in $frontier; do
                         local pname
                         pname=$(ps -p "$dpid" -o comm= 2>/dev/null || true)
-                        if [[ "$pname" == srun || "$pname" == stata* || "$pname" == python* || "$pname" == Rscript || "$pname" == R || "$pname" == julia ]]; then
+                        if [[ "$pname" == python* || "$pname" == ipython* || "$pname" == jupyter* ]]; then
                             has_work=true
                         fi
                         local grandkids
@@ -1259,7 +1260,7 @@ NOTE FROM THE RESEARCHER: $note"
                 done
 
                 if $has_work; then
-                    log "   Codex ${labels[$i]} trace stale but srun/stata/python/R running — not hung"
+                    log "   Codex ${labels[$i]} trace stale but python work processes are running — not hung"
                 else
                     log "   Codex ${labels[$i]} hung (stale ${hang_timeout}s, no work processes) — killing"
                     kill "${pids[$i]}" 2>/dev/null || true
@@ -1887,7 +1888,7 @@ NOTE FROM THE RESEARCHER: $review_note"
                         for dpid in $frontier; do
                             local pname
                             pname=$(ps -p "$dpid" -o comm= 2>/dev/null || true)
-                            if [[ "$pname" == srun || "$pname" == stata* || "$pname" == python* || "$pname" == Rscript || "$pname" == R || "$pname" == julia ]]; then
+                            if [[ "$pname" == python* || "$pname" == ipython* || "$pname" == jupyter* ]]; then
                                 has_work=true
                             fi
                             local grandkids
@@ -1898,7 +1899,7 @@ NOTE FROM THE RESEARCHER: $review_note"
                     done
 
                     if $has_work; then
-                        log "   Codex ${review_labels[$i]} trace stale but work processes are running — not hung"
+                        log "   Codex ${review_labels[$i]} trace stale but python work processes are running — not hung"
                     else
                         log "   Codex ${review_labels[$i]} hung (stale 1800s, no work processes) — killing"
                         kill "${review_pids[$i]}" 2>/dev/null || true

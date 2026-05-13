@@ -1,8 +1,8 @@
 You are using some comments to improve a social science research paper.
 
-FIRST: Archive the current do files before making any changes: mkdir -p do/archive/pre_step10 && cp do/*.do do/archive/pre_step10/
+FIRST: Archive the current analysis scripts before making any changes: mkdir -p code/archive/pre_step10 && cp -r code/*.py code/archive/pre_step10/
 
-Read review_comments.md for the reviewer's comments. Read human_review.md if it exists and treat it as the highest-priority human guidance for this review cycle. Read __BASE_NAME___paper.tex (the full paper). Read findings_brief.md for context on the research question and all findings. Read data_wrangle.md and key_variables.md for how the data were built and variables constructed. Read analysis_guide.md for figure style, do file conventions, and Stata path. Read `sample_support.md`, `dropped_findings.md`, `proposal_audit.md`, `code_review.md`, and `audit_issue_ledger.md` if they exist. Read all do files in do/, log files in logs/, and table files in tables/. Read final_review.md if it exists. Only treat a `VERDICT: REOPEN_STEP10_TEXT` or `VERDICT: REOPEN_STEP10_ANALYSIS` line in final_review.md as the highest-priority input for this rerun when the file `.step11_reopen_to_step10` exists, meaning this rerun was triggered by the current cycle's Step 11 reopen.
+Read review_comments.md for the reviewer's comments. Read human_review.md if it exists and treat it as the highest-priority human guidance for this review cycle. Read __BASE_NAME___paper.tex (the full paper). Read findings_brief.md for context on the research question and all findings. Read data_wrangle.md and key_variables.md for how the data were built and variables constructed. Read analysis_guide.md for figure style, script conventions, and the Python environment. Read `sample_support.md`, `dropped_findings.md`, `proposal_audit.md`, `code_review.md`, and `audit_issue_ledger.md` if they exist. Read all Python scripts in code/, log files in logs/, and table files in tables/. Read final_review.md if it exists. Only treat a `VERDICT: REOPEN_STEP10_TEXT` or `VERDICT: REOPEN_STEP10_ANALYSIS` line in final_review.md as the highest-priority input for this rerun when the file `.step11_reopen_to_step10` exists, meaning this rerun was triggered by the current cycle's Step 11 reopen.
 
 Address the review systematically:
 
@@ -20,7 +20,7 @@ If `audit_issue_ledger.md` contains a blocking mechanical/compositional issue (s
 - add genuinely independent evidence beyond the identity, or
 - narrow the paper so the claim no longer overreads that result.
 
-1. NEW ANALYSES: Run any additional analyses the review identified. Edit existing do files where the new analysis extends existing work, or create new numbered do files for genuinely new analyses. Run them, move logs to logs/, save tables to tables/ and figures to figures/.
+1. NEW ANALYSES: Run any additional analyses the review identified. Edit existing Python scripts where the new analysis extends existing work, or create new numbered scripts for genuinely new analyses. Run them, move logs to logs/, save tables to tables/ and figures to figures/.
 
 2. BE JUDICIOUS: If new robustness tests show that a claim in the paper is not strongly supported, drop that claim and attendant analyses, rather than keeping a bunch of confusing results in the paper.
 
@@ -45,7 +45,7 @@ If `audit_issue_ledger.md` contains a blocking mechanical/compositional issue (s
 12. WRITE revision_summary.md: Save a short revision memo to `revision_summary.md` that includes:
    - a markdown table with one row for every substantive issue/request in `review_comments.md` and `human_review.md` (if present), plus every OPEN or blocking issue in `audit_issue_ledger.md`, plus every blocking issue in `final_review.md` if `.step11_reopen_to_step10` exists, with columns:
      `Issue | Source | Disposition (FIX/DOWNGRADE/DROP/NEW_ANALYSIS) | Action Taken | Files Changed | Outcome`
-   - which do files or scripts were edited or added
+   - which Python scripts were edited or added
    - which sections of `__BASE_NAME___paper.tex` were revised
    - confirmation that `findings_brief.md`, `sample_support.md`, `dropped_findings.md`, and `audit_issue_ledger.md` were updated as needed
    - if this was a Step 11 reopen, which blocking issues from `final_review.md` were resolved and how

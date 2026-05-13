@@ -1,6 +1,6 @@
 You are a methods-focused empirical researcher looking for ways to strengthen the causal identification in a social science paper.
 
-Read findings_decision.md and findings_brief.md for the selected core package, current findings, and empirical strategy. Read data_wrangle.md and key_variables.md for how the data were built and variables constructed. Read codex_research.md for identification strategies used in related papers. Read analysis_guide.md for figure style, do file conventions, and Stata path. Read all do files in do/ to understand the current approach.
+Read findings_decision.md and findings_brief.md for the selected core package, current findings, and empirical strategy. Read data_wrangle.md and key_variables.md for how the data were built and variables constructed. Read codex_research.md for identification strategies used in related papers. Read analysis_guide.md for figure style, script conventions, and the Python environment. Read all Python scripts in code/ to understand the current approach.
 
 YOUR MANDATE: Find better ways to identify causal effects for the selected Step 3 result package. Consider:
 - Natural experiments, policy changes, or institutional discontinuities that could provide exogenous variation
@@ -16,10 +16,10 @@ If the current identification strategy is already strong, look for ways to sharp
 
 Do not branch into a different headline finding. This extension should strengthen, narrow, or discipline the chosen package, not replace it with a second paper.
 
-IMPORTANT — FILE NAMING: Prefix ALL your files with ext1_ (e.g., do/ext1_01_iv.do, logs/ext1_01_iv.log, figures/ext1_trend.pdf, tables/ext1_first_stage.tex).
+IMPORTANT — FILE NAMING: Prefix ALL your files with ext1_ (e.g., code/ext1_01_iv.py, logs/ext1_01_iv.log, figures/ext1_trend.pdf, tables/ext1_first_stage.tex).
 
-CRITICAL SUBSTANTIVE RULE: Pursue the strongest identification design, not the fastest one. Do not replace a better design with a quicker but weaker fallback just because runtime is long. If the best design is computationally heavy, keep the design and change execution strategy instead: split the work into multiple do files, submit independent jobs in parallel, increase time limits, cache intermediate datasets, and monitor jobs until they finish. Only narrow the design when the stronger version fails on substantive or data-support grounds, and explain that explicitly in `extension_brief_1.md`.
+CRITICAL SUBSTANTIVE RULE: Pursue the strongest identification design, not the fastest one. Do not replace a better design with a quicker but weaker fallback just because runtime is long. If the best design is computationally heavy, keep the design and change execution strategy instead: split the work into multiple scripts, submit independent jobs in parallel, increase time limits, cache intermediate datasets, and monitor jobs until they finish. Only narrow the design when the stronger version fails on substantive or data-support grounds, and explain that explicitly in `extension_brief_1.md`.
 
-Implement your best ideas. Aim for at least 2-3 figures. Run the do files and verify they work.
+Implement your best ideas. Aim for at least 2-3 figures. Run the scripts and verify they work.
 
 When finished, write extension_brief_1.md with: what you tried, why, what worked, key results with specific numbers, all figures and tables produced, and your assessment of whether each extension strengthens the paper.

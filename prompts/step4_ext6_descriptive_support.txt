@@ -7,7 +7,7 @@ Read:
 - `key_variables.md`
 - `analysis_guide.md`
 - `codex_research.md` if it exists
-- all do files in `do/`
+- all Python scripts in `code/`
 
 MANDATE:
 - Focus on the chosen Step 3 result package only.

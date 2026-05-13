@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract numbers from a .tex paper and Stata logs, flag mismatches.
+"""Extract numbers from a .tex paper and Python analysis logs, flag mismatches.
 
 Usage:
     python3 verify_numbers.py <project_dir> <base_name>
@@ -36,7 +36,8 @@ def extract_tex_numbers(tex_path):
     text = re.sub(r'\\(?:begin|end)\{[^}]*\}', '', text)
     # Remove figure/table float environments entirely (captions are ok but
     # the filenames and labels inside aren't prose numbers)
-    # Remove tabular content (numbers inside tables are from esttab, not prose)
+    # Remove tabular content (numbers inside tables are emitted by the
+    # regression-table writer, not the paper prose)
     text = re.sub(r'\\begin\{tabular\}.*?\\end\{tabular\}', '', text, flags=re.DOTALL)
 
     results = []
@@ -84,7 +85,7 @@ def extract_tex_numbers(tex_path):
 
 
 def extract_log_numbers(log_dir):
-    """Extract all numbers from Stata log files."""
+    """Extract all numbers from Python analysis log files."""
     numbers = set()
     log_files = glob.glob(os.path.join(log_dir, '*.log'))
 
