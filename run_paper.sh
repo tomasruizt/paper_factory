@@ -22,6 +22,15 @@ REGISTRY="$FACTORY/run_state/process_registry"
 KILL_MARKER=".killed"
 REVIEW_STATE_FILE=".review_state.json"
 
+# Model / reasoning-effort config. Lower these to fit within rate limits.
+# Override per-run via env vars, e.g.:
+#   CODEX_EFFORT=medium CLAUDE_EFFORT=high ./launch_agents.sh new my_paper "..."
+# Codex effort tiers (cheapest → priciest): minimal, low, medium, high, xhigh
+# Claude effort tiers (cheapest → priciest): low, medium, high, max
+CODEX_MODEL="${CODEX_MODEL:-gpt-5.5}"
+CODEX_EFFORT="${CODEX_EFFORT:-medium}"
+CLAUDE_EFFORT="${CLAUDE_EFFORT:-high}"
+
 export PATH="$HOME/local/node/bin:$PATH"
 
 # ── File-state step inference ────────────────────────────────────────
@@ -665,8 +674,8 @@ Do not inspect, reference, reuse, or mention completed projects unless the human
     (
         cd "$PROJECT" && timeout --kill-after=120 3600 \
             codex exec \
-              --model gpt-5.5 \
-              -c 'model_reasoning_effort="xhigh"' \
+              --model "$CODEX_MODEL" \
+              -c "model_reasoning_effort=\"$CODEX_EFFORT\"" \
               --dangerously-bypass-approvals-and-sandbox \
               -C "$PROJECT" \
               --skip-git-repo-check \
@@ -927,8 +936,8 @@ NOTE FROM THE RESEARCHER: $note"
 
     ( cd "$PROJECT" && timeout --kill-after=120 "$timeout" \
         codex exec \
-          --model gpt-5.5 \
-          -c 'model_reasoning_effort="xhigh"' \
+          --model "$CODEX_MODEL" \
+          -c "model_reasoning_effort=\"$CODEX_EFFORT\"" \
           --dangerously-bypass-approvals-and-sandbox \
           -C "$PROJECT" \
           --skip-git-repo-check \
@@ -1020,7 +1029,7 @@ NOTE FROM THE RESEARCHER: $note"
 
     set +e
     ( cd "$PROJECT" && unbuffer timeout --kill-after=120 "$timeout" \
-        claude -p "$prompt" --dangerously-skip-permissions --effort max \
+        claude -p "$prompt" --dangerously-skip-permissions --effort "$CLAUDE_EFFORT" \
     ) > "$claude_log" 2>&1
     local ec=$?
     set -e
@@ -1165,8 +1174,8 @@ NOTE FROM THE RESEARCHER: $note"
 
         ( cd "$PROJECT" && timeout --kill-after=120 "$timeout" \
             codex exec \
-              --model gpt-5.5 \
-              -c 'model_reasoning_effort="xhigh"' \
+              --model "$CODEX_MODEL" \
+              -c "model_reasoning_effort=\"$CODEX_EFFORT\"" \
               --dangerously-bypass-approvals-and-sandbox \
               -C "$PROJECT" \
               --skip-git-repo-check \
@@ -1324,8 +1333,8 @@ NOTE FROM THE RESEARCHER: $step1_note"
         (
             cd "$PROJECT" && timeout --kill-after=120 21600 \
                 codex exec \
-                  --model gpt-5.5 \
-                  -c 'model_reasoning_effort="xhigh"' \
+                  --model "$CODEX_MODEL" \
+                  -c "model_reasoning_effort=\"$CODEX_EFFORT\"" \
                   --dangerously-bypass-approvals-and-sandbox \
                   -C "$PROJECT" \
                   --skip-git-repo-check \
@@ -1374,8 +1383,8 @@ NOTE FROM THE RESEARCHER: $step1b5_note"
         (
             cd "$PROJECT" && timeout --kill-after=120 10800 \
                 codex exec \
-                  --model gpt-5.5 \
-                  -c 'model_reasoning_effort="xhigh"' \
+                  --model "$CODEX_MODEL" \
+                  -c "model_reasoning_effort=\"$CODEX_EFFORT\"" \
                   --dangerously-bypass-approvals-and-sandbox \
                   -C "$PROJECT" \
                   --skip-git-repo-check \
@@ -1552,8 +1561,8 @@ NOTE FROM THE RESEARCHER: $note"
             (
                 cd "$PROJECT" && timeout --kill-after=120 "$finding_timeout" \
                     codex exec \
-                      --model gpt-5.5 \
-                      -c 'model_reasoning_effort="xhigh"' \
+                      --model "$CODEX_MODEL" \
+                      -c "model_reasoning_effort=\"$CODEX_EFFORT\"" \
                       --dangerously-bypass-approvals-and-sandbox \
                       -C "$PROJECT" \
                       --skip-git-repo-check \
@@ -1562,7 +1571,7 @@ NOTE FROM THE RESEARCHER: $note"
         else
             (
                 cd "$PROJECT" && unbuffer timeout --kill-after=120 "$finding_timeout" \
-                    claude -p "$prompt" --dangerously-skip-permissions --effort max
+                    claude -p "$prompt" --dangerously-skip-permissions --effort "$CLAUDE_EFFORT"
             ) > "$log_path" 2>&1 &
         fi
 
@@ -1589,8 +1598,8 @@ NOTE FROM THE RESEARCHER: $note"
         (
             cd "$PROJECT" && timeout --kill-after=120 "$critic_timeout" \
                 codex exec \
-                  --model gpt-5.5 \
-                  -c 'model_reasoning_effort="xhigh"' \
+                  --model "$CODEX_MODEL" \
+                  -c "model_reasoning_effort=\"$CODEX_EFFORT\"" \
                   --dangerously-bypass-approvals-and-sandbox \
                   -C "$PROJECT" \
                   --skip-git-repo-check \
@@ -1758,8 +1767,8 @@ run_step_4() {
         local arch_log="$PROJECT/logs/step_${NEXT}_architect_${n}_$(date +%Y%m%d_%H%M%S).log"
         ( cd "$PROJECT" && timeout --kill-after=120 7200 \
             codex exec \
-              --model gpt-5.5 \
-              -c 'model_reasoning_effort="xhigh"' \
+              --model "$CODEX_MODEL" \
+              -c "model_reasoning_effort=\"$CODEX_EFFORT\"" \
               --dangerously-bypass-approvals-and-sandbox \
               -C "$PROJECT" \
               --skip-git-repo-check \
@@ -1823,8 +1832,8 @@ NOTE FROM THE RESEARCHER: $review_note"
 
             ( cd "$PROJECT" && timeout --kill-after=120 7200 \
                 codex exec \
-                  --model gpt-5.5 \
-                  -c 'model_reasoning_effort="xhigh"' \
+                  --model "$CODEX_MODEL" \
+                  -c "model_reasoning_effort=\"$CODEX_EFFORT\"" \
                   --dangerously-bypass-approvals-and-sandbox \
                   -C "$PROJECT" \
                   --skip-git-repo-check \
