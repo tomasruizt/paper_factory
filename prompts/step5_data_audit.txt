@@ -1,8 +1,8 @@
 You are a data specialist auditing the empirical analysis for a social science paper.
 
-FIRST: Archive the current do files before making any changes: mkdir -p do/archive/pre_step5 && cp do/*.do do/archive/pre_step5/
+FIRST: Archive the current analysis scripts before making any changes: mkdir -p code/archive/pre_step5 && cp -r code/*.py code/archive/pre_step5/
 
-Read findings_brief.md for the research question and current findings. Read data_wrangle.md for how the raw data were merged and samples constructed. Read key_variables.md for variable definitions, construction decisions, and measure validation. Read analysis_guide.md for do file conventions and Stata path. Read all do files in do/ and log files in logs/. Read all table files in tables/. Also read `proposal_audit.md` and `audit_issue_ledger.md` if they exist. Treat unresolved blocking issues there as mandatory inputs to this audit rather than as optional background.
+Read findings_brief.md for the research question and current findings. Read data_wrangle.md for how the raw data were merged and samples constructed. Read key_variables.md for variable definitions, construction decisions, and measure validation. Read analysis_guide.md for script conventions and the Python environment. Read all Python scripts in code/ and log files in logs/. Read all table files in tables/. Also read `proposal_audit.md` and `audit_issue_ledger.md` if they exist. Treat unresolved blocking issues there as mandatory inputs to this audit rather than as optional background.
 
 THE PAPER'S MAIN IDEA: __RESEARCH_QUESTION__
 
@@ -31,7 +31,7 @@ Your job is not just to flag issues but to SOLVE them. Work through this checkli
 
 If a result trips any of these checks, do not just note it abstractly. Quantify the risk. Compute the relevant accounting or proportional-displacement benchmark where possible, add non-mechanical companion specifications where feasible, and state whether the current headline framing needs downgrade or disclosure.
 
-For each relevant issue: do not just flag it — fix it. Edit the existing do files in place (do not create duplicate versions), re-run them, and update any affected tables or figures. If a problem requires supplementary data you don't have, search for and download it. If an issue does not apply to this data or paper, note why briefly and move on.
+For each relevant issue: do not just flag it — fix it. Edit the existing Python scripts in place (do not create duplicate versions), re-run them, and update any affected tables or figures. If a problem requires supplementary data you don't have, search for and download it. If an issue does not apply to this data or paper, note why briefly and move on.
 
 CRITICAL — CHECK ALL OUTPUTS, NOT JUST THE MAIN ANALYSIS: When you identify a data limitation (e.g., a reporting-regime break, a change in survey coverage, a variable that is only reliable after a certain year), do NOT stop at verifying that the main regression/event-study code handles it. Go back and check EVERY figure and EVERY table in the project — including descriptive trends, summary statistics, and exploratory plots — for the same limitation. A data problem that is correctly restricted away in the analytical code can still leak into descriptive figures that use the full time series, creating misleading visual patterns that readers will see. For each limitation you identify, list every output file (figure and table) that could be affected, verify each one, and fix any that show data from the problematic period without appropriate restriction or annotation.
 

@@ -12,7 +12,7 @@ Read all of the following before writing anything:
 - `descriptive_map.md`
 - `codex_research.md` if it exists
 - `findings_memo___STREAM_ID__.md`
-- all `do/__STREAM_PREFIX___*.do` files
+- all `code/__STREAM_PREFIX___*.py` files
 - all `logs/__STREAM_PREFIX___*.log` files
 - all `tables/__STREAM_PREFIX___*` files
 - all `figures/__STREAM_PREFIX___*` files

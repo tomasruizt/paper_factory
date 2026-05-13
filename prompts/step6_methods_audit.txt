@@ -1,8 +1,8 @@
 You are a methods specialist auditing the empirical strategy for a social science paper.
 
-FIRST: Archive the current do files before making any changes: mkdir -p do/archive/pre_step6 && cp do/*.do do/archive/pre_step6/
+FIRST: Archive the current analysis scripts before making any changes: mkdir -p code/archive/pre_step6 && cp -r code/*.py code/archive/pre_step6/
 
-Read findings_brief.md for the research question, current findings, and the methods used. Read data_wrangle.md and key_variables.md for how the data were built and variables constructed. Read analysis_guide.md for figure style, do file conventions, and Stata path. Read all do files in do/ and log files in logs/. Read all table files in tables/. Also read `proposal_audit.md` and `audit_issue_ledger.md` if they exist. Treat unresolved blocking issues there as mandatory inputs.
+Read findings_brief.md for the research question, current findings, and the methods used. Read data_wrangle.md and key_variables.md for how the data were built and variables constructed. Read analysis_guide.md for figure style, script conventions, and the Python environment. Read all Python scripts in code/ and log files in logs/. Read all table files in tables/. Also read `proposal_audit.md` and `audit_issue_ledger.md` if they exist. Treat unresolved blocking issues there as mandatory inputs.
 
 THE PAPER'S MAIN IDEA: __RESEARCH_QUESTION__
 
@@ -18,7 +18,7 @@ Based on what you learned from the methods literature and your reading of the cu
 - Placebo or falsification tests
 - Bounding exercises or sensitivity analysis (e.g., Oster 2019, Altonji et al. 2005)
 - Method-specific diagnostics (e.g., pre-trends tests for DiD, first-stage F-stats for IV, balance tests for RD)
-- Alternative estimators if relevant (e.g., Callaway-SantAnna or Sun-Abraham for staggered DiD)
+- Alternative estimators if relevant (e.g., Callaway-Sant'Anna via `differences` or `csdid`, Sun-Abraham via `pyfixest.feols(..., i(...))` for staggered DiD)
 - Controls for potential confounders flagged in the literature
 
 MECHANICAL / ESTIMAND AUDIT:
@@ -37,9 +37,9 @@ The event study pre-period is critical for credibility. Audit the following and 
 
 2. REFERENCE PERIOD: The omitted reference period should be t-1 (the period immediately before treatment). Verify this is what the code uses. If the code omits a different period, or if the reference period is ambiguous, fix it.
 
-For each test you add: edit existing do files to add the new code where it fits logically (e.g., add robustness checks to the existing robustness do file), or create a new numbered do file only if the analysis is genuinely distinct. Run the do files, move logs to logs/, and save tables to tables/ or figures to figures/. Follow the conventions in analysis_guide.md exactly.
+For each test you add: edit existing Python scripts to add the new code where it fits logically (e.g., add robustness checks to the existing robustness script), or create a new numbered script only if the analysis is genuinely distinct. Run the scripts, move logs to logs/, and save tables to tables/ or figures to figures/. Follow the conventions in analysis_guide.md exactly.
 
-Do NOT duplicate tests that already exist in the current code. Read the existing do files carefully first.
+Do NOT duplicate tests that already exist in the current code. Read the existing scripts carefully first.
 
 STEP 3: PRE-TREND / FIRST-STAGE GATE.
 If the analysis uses any causal design (difference-in-differences, event study, instrumental variables, regression discontinuity), enforce the following:

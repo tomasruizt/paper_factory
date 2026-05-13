@@ -7,7 +7,7 @@ Read project_brief.md for the research question and data locations. Read data_wr
 YOUR JOB:
 
 1. STUDY THE DATA DOCUMENTATION.
-   - Look for codebooks, README files, data dictionaries, instrument descriptions, filing instructions, survey questionnaires, technical documentation, producer websites, and nearby legacy .do/.py scripts that explain the data.
+   - Look for codebooks, README files, data dictionaries, instrument descriptions, filing instructions, survey questionnaires, technical documentation, producer websites, and nearby legacy analysis scripts (.py, .ipynb, .do, .R) that explain the data.
    - Focus on the actual sources used in this project, not generic background reading.
    - If there are multiple vintages or documentation files, note which one applies to the years and variables this project uses.
 

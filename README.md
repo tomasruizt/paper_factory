@@ -1,14 +1,16 @@
-# Local Paper Factory
+# Local Paper Factory (Python edition)
 
-This directory is a local-computer port of the paper factory. It keeps the paper prompts, the step runner, the paper-style resources, and the audit helpers, but removes the Slurm and watchdog dependency. It does not include paper projects, datasets, credentials, runtime logs, or generated PDFs.
+This directory is a local-computer port of the paper factory. It keeps the paper prompts, the step runner, the paper-style resources, and the audit helpers, but removes the Slurm and watchdog dependency. This fork replaces Stata with **Python** as the analysis language — every step writes `.py` scripts, reads `.parquet`/`.csv` data, and produces matplotlib figures and LaTeX tables via `stargazer` or `pandas.to_latex`.
+
+It does not include paper projects, datasets, credentials, runtime logs, or generated PDFs.
 
 ## What It Includes
 
 - `launch_agents.sh`: local launcher with `new`, `resume`, `pause`, `run`, `attach`, `trace`, and `status`
 - `run_paper.sh`: 16-step paper runner adapted for local execution
-- `prompts/`: the paper-step prompt templates
-- `analysis_guide.md`: local conventions for Stata, figures, file layout, and LaTeX
-- `stata_submit.sh` and `stata_wrapper.sh`: local Stata execution helpers
+- `prompts/`: the paper-step prompt templates (Python-only)
+- `analysis_guide.md`: local conventions for Python, figures, file layout, and LaTeX
+- `python_submit.sh`: local Python execution helper (submit/status/wait/dry-run)
 - `compile_paper.sh`: helper for `pdflatex` and `bibtex`
 - `resources/`: `paper.sty`, `bibliography.bst`, `model_papers_style.json`, and `Abstract_examples.md`
 - `scripts/`: `verify_numbers.py` and `cleanup_project_artifacts.py`
@@ -18,7 +20,8 @@ This directory is a local-computer port of the paper factory. It keeps the paper
 - `codex` CLI installed and authenticated
 - `claude` CLI installed and authenticated
 - `pdflatex` and `bibtex` on `PATH`
-- local Stata available, either on `PATH` or via `STATA_BIN=/full/path/to/stata-mp`
+- a working Python 3 interpreter on `PATH` (or set `PYTHON_BIN=/path/to/python`)
+- recommended Python libraries: `pandas`, `numpy`, `pyarrow`, `statsmodels`, `linearmodels`, `pyfixest`, `matplotlib`, `scipy`, `stargazer`. Install with `pip install pandas numpy pyarrow statsmodels linearmodels pyfixest matplotlib scipy stargazer` (or via `uv pip install ...`).
 
 ## Quick Start
 
@@ -27,7 +30,7 @@ Clone the repository, enter the directory, and check that the launcher is execut
 ```bash
 git clone <repo-url> local_factory
 cd local_factory
-chmod +x launch_agents.sh run_paper.sh compile_paper.sh stata_submit.sh stata_wrapper.sh
+chmod +x launch_agents.sh run_paper.sh compile_paper.sh python_submit.sh
 ./launch_agents.sh status
 ```
 
@@ -106,6 +109,7 @@ Follow the local runner log:
 
 - The local launcher uses background processes and pid files instead of Slurm jobs.
 - There is no local watchdog. If a run exits, inspect the log and resume it manually.
+- All analysis code is Python. Scripts live under each project's `code/` directory; logs under `logs/`; analysis-ready data under `data/final/` as `.parquet`.
 - Step 1 now includes a required `data_context.md` memo produced after wrangling and before Step 2.
 - Step 2 runs six focused findings-package streams with critique/validation; Step 3 selects one package to carry forward rather than synthesizing across all six.
 - The workflow now maintains an `audit_issue_ledger.md` inside each project once Step 4 runs. That ledger is the required cross-step record of blocking, major, and minor issues plus their resolution status.

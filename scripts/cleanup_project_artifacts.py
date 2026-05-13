@@ -59,10 +59,10 @@ SOURCE_FILE_EXTS = {
 
 CODE_FILE_EXTS = {
     ".py",
-    ".do",
+    ".ipynb",
     ".sh",
-    ".r",
-    ".R",
+    ".toml",
+    ".cfg",
     ".md",
 }
 
@@ -137,7 +137,7 @@ def is_source_artifact(path, rel_parts):
         return True
     if any(marker in lower_name for marker in SOURCE_NAME_MARKERS):
         return True
-    if SOURCE_PREFIX_RE.match(lower_name) and suffix != ".dta":
+    if SOURCE_PREFIX_RE.match(lower_name) and suffix not in {".parquet", ".feather", ".pkl"}:
         return True
     return False
 

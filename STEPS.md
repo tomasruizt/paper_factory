@@ -1,19 +1,20 @@
 # Local Paper Skill
 
-This is the local-computer version of the paper factory. Use local binaries and the helper scripts in this directory. Do not use Slurm, `sbatch`, `srun`, `sacct`, or `module load`.
+This is the local-computer version of the paper factory. It uses **Python** as its analysis language end-to-end (no Stata, no R). Use local binaries and the helper scripts in this directory. Do not use Slurm, `sbatch`, `srun`, `sacct`, or `module load`.
 
 ## Local Infrastructure
 
 - Factory root: this `local_factory/` directory
 - Project directories: `ongoing/{base}/` while running, `complete/{base}/` after delivery
-- Local Stata wrapper: `../../stata_submit.sh` from within a project directory
+- Local Python wrapper: `../../python_submit.sh` from within a project directory
 - Local compile helper: `../../compile_paper.sh "$(pwd)" {base}`
 - Prompt templates: `prompts/step*.txt`
 
 ## General Rules
 
 - Run each step with a fresh agent context.
-- Follow `analysis_guide.md` in the project directory for Stata usage, figure style, file layout, and esttab conventions.
+- Follow `analysis_guide.md` in the project directory for Python usage, figure style, file layout, and regression-table conventions.
+- All analysis code is Python (`.py`) under `code/`. Logs in `logs/`. Analysis datasets in `data/final/` as `.parquet`. Tables in `tables/`. Figures in `figures/`.
 - Keep raw artifacts under `data/raw/`, rebuildable staged outputs under `data/intermediate/`, and analysis-ready datasets under `data/final/` unless the project already uses a legacy `analysis/` hierarchy.
 - Update `checkpoint.md` after every verified step.
 - Maintain `audit_issue_ledger.md` as the canonical cross-step issue tracker once it is first created in Step 4. Later audit, review, revision, and final-review steps must update statuses in place rather than silently dropping concerns.
@@ -23,7 +24,7 @@ This is the local-computer version of the paper factory. Use local binaries and 
 
 For a new project:
 - Read the research question from `checkpoint.md`.
-- Locate the relevant `.dta` files or other source data.
+- Locate the relevant source data files (parquet, csv, feather, or other tabular formats; legacy `.dta` is acceptable to ingest via `pd.read_stata`).
 - Write `project_brief.md` with the research question, data locations, project path, and any relevant context.
 - Do not begin Step 1 until setup is complete.
 
@@ -44,7 +45,7 @@ Complete these substeps before Step 2:
 Produce:
 - `findings_memo_1.md` through `findings_memo_6.md`
 - `findings_critique_1.md` through `findings_critique_6.md`
-- six validated focused findings packages, each with its own prefixed do files, logs, tables, and figures
+- six validated focused findings packages, each with its own prefixed Python scripts, logs, tables, and figures
 
 Run six parallel findings streams. Each stream should build one focused candidate package with only 1-2 core tables and 1-2 core figures, not a broad project map. As each memo finishes, send it to a critic. Findings and criticism should loop until each package either validates cleanly or is clearly not worth carrying forward. Ground the packages in `data_context.md`, `data_wrangle.md`, `key_variables.md`, and `descriptive_map.md`.
 
@@ -65,7 +66,7 @@ Produce:
 - `proposal_audit.md`
 - `audit_issue_ledger.md`
 - `argument_decision.md`
-- updated unified analysis outputs, figures, tables, and `findings_brief.md`
+- updated unified analysis outputs (Python scripts under `code/`), figures, tables, and `findings_brief.md`
 
 Run seven parallel extension agents to stress-test and elaborate the selected Step 3 package. The extension mandates are: identification, supplementary data, heterogeneity, primary robustness, objection robustness, descriptive support, and one open-ended moonshot. Then run five argument architects in parallel, each proposing one focused paper around the same selected package.
 
@@ -92,7 +93,7 @@ Produce:
 
 Produce:
 - `{base}_paper.tex`
-- at least 5 figures and the supporting tables/logs/do files
+- at least 5 figures and the supporting tables/logs/Python scripts
 - `sample_support.md`
 - `dropped_findings.md`
 

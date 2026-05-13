@@ -6,7 +6,7 @@ Read:
 - `data_wrangle.md`
 - `key_variables.md`
 - `analysis_guide.md`
-- all do files in `do/`
+- all Python scripts in `code/`
 
 MANDATE:
 - Focus on the chosen Step 3 result package only.

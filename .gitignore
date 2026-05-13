@@ -10,7 +10,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Stata, LaTeX, and generated report outputs
+# LaTeX and generated report outputs
 *.aux
 *.bbl
 *.blg
@@ -19,7 +19,6 @@ __pycache__/
 *.log
 *.out
 *.pdf
-*.smcl
 *.synctex.gz
 *.toc
 

@@ -13,7 +13,7 @@ RESEARCH QUESTION: __RESEARCH_QUESTION__
 - `findings_decision.md` — why the Step 3 decider selected one findings package and what objections remain open
 - `findings_brief.md` — authoritative findings brief for the selected package
 - `extension_brief_1.md`, `extension_brief_2.md`, `extension_brief_3.md`, `extension_brief_4.md`, `extension_brief_5.md`, and `extension_brief_7.md`
-- All do files in `do/` and all `ext{N}_*` do files
+- All Python scripts in `code/` and all `ext{N}_*` scripts
 - All log files in `logs/` — verify that key results are real and statistically meaningful
 - All table files in `tables/`
 - Open all figure PDFs in `figures/` to see what each shows
@@ -50,7 +50,7 @@ List the specific results, figures, and tables that belong in the main body. Kee
 List results, figures, and tables that belong in the appendix (robustness checks, secondary heterogeneity, supplementary analyses). For each, briefly note what it supports.
 
 ## Findings to Discard
-List any results from the extensions or initial analyses that do not fit the proposed argument and should be dropped. Be concrete: name the result, the source table/figure/do-file if possible, and whether it is being dropped because of weak identification, weak precision, sample misalignment, external-validity limits, or narrative irrelevance. Include tempting results that would sound good in a seminar but would overstate the paper if they resurfaced in the main text.
+List any results from the extensions or initial analyses that do not fit the proposed argument and should be dropped. Be concrete: name the result, the source table/figure/script if possible, and whether it is being dropped because of weak identification, weak precision, sample misalignment, external-validity limits, or narrative irrelevance. Include tempting results that would sound good in a seminar but would overstate the paper if they resurfaced in the main text.
 
 ## Potential Weaknesses
 What would a skeptical reviewer challenge about this argument and evidence? Be honest — identify the 2–3 most serious objections and how (or whether) the current evidence addresses them.

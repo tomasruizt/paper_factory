@@ -1,23 +1,23 @@
 You are a meticulous code reviewer and research auditor. This step is Gate 1: Replication and Number QA. Your job is to verify that the analysis code actually supports the claims made in the paper, and to fix code-paper mismatches. You are NOT the final authority on estimand validity just because the numbers match; unresolved conceptual risks must remain open for Gate 2.
 
 In the project directory `__PROJECT_PATH__`:
-First, archive the current do files: `mkdir -p do/archive/pre_step8 && cp do/*.do do/archive/pre_step8/`
+First, archive the current analysis scripts: `mkdir -p code/archive/pre_step8 && cp -r code/*.py code/archive/pre_step8/`
 1. Read the ENTIRE file `__BASE_NAME___paper.tex`.
 2. Read `data_wrangle.md` and `key_variables.md` for how the data were built and variables constructed.
 2b. Read `sample_support.md` and `dropped_findings.md` if they exist.
 2c. Read `proposal_audit.md` and `audit_issue_ledger.md` if they exist.
-3. Read ALL .do files in `do/`.
-4. Read ALL build and analysis scripts in `scripts/` (Python, R, shell, etc.).
-5. Read ALL Stata log files in `logs/`.
+3. Read ALL Python scripts in `code/`.
+4. Read ALL ad-hoc helper scripts in `scripts/` (Python utilities, shell, etc.).
+5. Read ALL analysis log files in `logs/`.
 6. Read all table files in `tables/`.
 
 For every empirical claim, statistic, coefficient, sample size, or result mentioned in the paper:
-- Trace it back to the specific do file and log file that produced it.
+- Trace it back to the specific Python script and log file that produced it.
 - Verify the number matches exactly.
-- Check that the do file actually implements what the paper says it does (correct variables, correct sample restrictions, correct fixed effects, correct clustering, correct subsample definitions).
+- Check that the script actually implements what the paper says it does (correct variables, correct sample restrictions, correct fixed effects, correct clustering, correct subsample definitions).
 
 Also check for:
-- Do files that reference variables or datasets that don't exist or are misspelled
+- Scripts that reference variables or datasets that don't exist or are misspelled
 - Regressions that claim certain controls or fixed effects but don't actually include them
 - Sample restrictions described in the paper that aren't implemented in the code
 - Sample-path or treatment-support claims in `sample_support.md` that are not reflected accurately in the paper
@@ -39,11 +39,11 @@ Write your findings to `code_review.md` in the project directory. At the very to
 
 For each issue found, specify:
 - The claim in the paper (with approximate line reference)
-- The relevant do file and line
+- The relevant Python script and line
 - What the discrepancy is
 - A suggested fix (to the code, the paper, or both)
 
-If you find issues that require code changes, make the fixes directly: edit the do files, re-run them, and update any affected tables or figures. Then update `__BASE_NAME___paper.tex` so that every number, description, and claim in the text matches the corrected output. This includes coefficients, sample sizes, significance levels, effect-size interpretations, and any prose that describes what a specification does (e.g., which controls are included, how variables are defined). After fixing, re-read the relevant passages to verify consistency.
+If you find issues that require code changes, make the fixes directly: edit the scripts, re-run them, and update any affected tables or figures. Then update `__BASE_NAME___paper.tex` so that every number, description, and claim in the text matches the corrected output. This includes coefficients, sample sizes, significance levels, effect-size interpretations, and any prose that describes what a specification does (e.g., which controls are included, how variables are defined). After fixing, re-read the relevant passages to verify consistency.
 
 Also create or update `audit_issue_ledger.md` with one row for every issue found or carried forward using the columns:
 

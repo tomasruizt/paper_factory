@@ -286,7 +286,7 @@ if [[ "${1:-}" == "new" ]]; then
     echo "Question: $QUESTION"
     echo ""
 
-    mkdir -p "$FACTORY/ongoing/$BASE_NAME"/{style,bib,figures,tables,do/archive,logs,replication,replication/temp,data/raw,data/intermediate,data/final,tmp,scripts,docs}
+    mkdir -p "$FACTORY/ongoing/$BASE_NAME"/{style,bib,figures,tables,code/archive,logs,replication,replication/temp,data/raw,data/intermediate,data/final,tmp,scripts,docs}
     cp "$PAPER_STY" "$FACTORY/ongoing/$BASE_NAME/style/"
     cp "$BIB_BST" "$FACTORY/ongoing/$BASE_NAME/bib/"
     cp "$STYLE_JSON" "$FACTORY/ongoing/$BASE_NAME/style/"

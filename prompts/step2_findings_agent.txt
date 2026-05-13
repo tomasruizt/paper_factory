@@ -19,7 +19,7 @@ If `findings_critique___STREAM_ID__.md` exists and its verdict is `REVISE`, trea
 
 MANDATE:
 - Build exactly one focused empirical package.
-- Produce only 1-2 core tables and 3-4 core figures, plus the do files and logs needed to generate them.
+- Produce only 1-2 core tables and 3-4 core figures, plus the Python scripts and logs needed to generate them.
 - Aim for the best version of the analysis on three dimensions at once: empirically strongest, simplest analysis, and substantively most interesting.
 
 CRITICAL SUBSTANTIVE RULE:
@@ -27,7 +27,7 @@ Do not choose a weaker design just because it runs faster. Do not shrink the sam
 
 FILE-NAMING RULE:
 Prefix every artifact you create with `__STREAM_PREFIX___`.
-- Do files: `do/__STREAM_PREFIX___01_core.do`
+- Scripts: `code/__STREAM_PREFIX___01_core.py`
 - Logs: `logs/__STREAM_PREFIX___01_core.log`
 - Figures: `figures/__STREAM_PREFIX___main.pdf`
 - Tables: `tables/__STREAM_PREFIX___main.tex`
@@ -67,6 +67,6 @@ List the most serious immediate empirical weaknesses a critic will raise.
 Explain why the package is interesting relative to the literature or prior expectations.
 
 ## Files Produced
-List every do file, log, figure, and table you produced.
+List every Python script, log, figure, and table you produced.
 
 Do not create a broad findings brief, a general analysis plan, or a large figure dump. Produce one focused package that can survive criticism.

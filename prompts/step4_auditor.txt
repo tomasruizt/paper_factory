@@ -10,8 +10,7 @@ A paper argument has been selected from five competing proposals. Read the chose
 - `key_variables.md` — variable definitions, construction decisions, measure validation
 - `findings_brief.md` and `descriptive_map.md`
 - `audit_issue_ledger.md` if it already exists
-- ALL do files in `do/`
-- ALL build and analysis scripts in `scripts/` (Python, R, shell, etc.)
+- ALL analysis scripts in `code/` and all ad-hoc helper scripts in `scripts/`
 - ALL log files in `logs/`
 - ALL table files in `tables/`
 

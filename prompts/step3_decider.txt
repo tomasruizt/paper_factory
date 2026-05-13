@@ -12,7 +12,7 @@ Read all of the following:
 - `findings_memo_1.md` through `findings_memo_6.md`
 - `findings_critique_1.md` through `findings_critique_6.md`
 
-For the finalists you are seriously considering, also spot-check the corresponding prefixed do files, logs, tables, and figures.
+For the finalists you are seriously considering, also spot-check the corresponding prefixed Python scripts, logs, tables, and figures.
 
 RULES:
 - Choose only from packages whose critique verdict is `VALIDATED`.
@@ -42,7 +42,7 @@ For each non-selected package, give the short reason it should not anchor the pa
 List the top empirical objections, fragilities, or unanswered questions that the extension agents should target.
 
 ## Core Files To Build From
-List the selected package's memo, do files, logs, tables, and figures.
+List the selected package's memo, Python scripts, logs, tables, and figures.
 
 Then write `findings_brief.md` as the authoritative project findings brief for the selected package only. It should include:
 - the original research question (verbatim)
