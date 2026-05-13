@@ -181,8 +181,10 @@ def parse_codex_line(d):
     elif t == "event_msg":
         msg_type = payload.get("type", "")
         if msg_type == "agent_message":
-            text = payload.get("message", "")[:150].replace("\n", " ")
-            return [f"  \033[33m...\033[0m {text}"]
+            # Skip — Codex emits the same prose twice, once as
+            # response_item/message (handled above) and once as this
+            # event_msg broadcast. Rendering both produces duplicates.
+            return []
         elif msg_type == "token_count":
             info = (payload.get("info") or {}).get("total_token_usage") or {}
             inp = info.get("input_tokens", 0)
