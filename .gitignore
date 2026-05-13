@@ -32,3 +32,6 @@ __pycache__/
 .vscode/
 *.swp
 *.swo
+
+# Profiler / tooling caches
+.cache/ncompass/
