@@ -4,6 +4,7 @@
 /complete/
 /papers/
 /run_state/
+/traces/
 
 # Python artifacts
 __pycache__/
